@@ -50,6 +50,6 @@ class AwardsController extends Controller
 
     	$attraction->delete();
     	$attractions = Attraction::all();
-    	return Response::json(['msg' => 'Done!', 'attractions' => $attractions], 200);*/
+    	return Response::json(['msg' => 'Done!', 'attractions' => $attractions], 200);**/
     }
 }
