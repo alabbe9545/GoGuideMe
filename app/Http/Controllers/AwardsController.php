@@ -2,54 +2,52 @@
 
 namespace GoGuideMe\Http\Controllers;
 
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
-use GoGuideMe\Awards;
+use GoGuideMe\Award;
+use GoGuideMe\Country;
+use GoGuideMe\Zone;
+use Response;
 
 class AwardsController extends Controller
 {
     public function index(){
-    	$awards = Awards::all();
-    	return view('attractions.index',compact('awards')); //make view
+    	$awards = Award::with('zone')->with('country')->get();
+    	$zones = Zone::all();
+    	$countries = Country::all();
+    	return view('awards.index',compact('awards', 'zones', 'countries')); //make view
     }
 
     public function store(Request $request){
-    	/*$attraction = new Attraction();
+    	$award = new Award();
 
-    	$photo = $request->file('photo');
-    	$audio = $request->file('audio');
     	$icon = $request->file('icon');
-
-    	$pathP = $photo->store('photos','public');
-    	$pathA = $audio->store('photos','public');
     	$pathI = $icon->store('photos','public');
 
-    	$attraction->foto_path = 'storage/' . $pathP;
-    	$attraction->audio_path = 'storage/' . $pathA;
-    	$attraction->icon_path = 'storage/' . $pathI;
-    	$attraction->name = $request->input('name');
-    	$attraction->description = $request->input('description');
-    	$attraction->zone_id = $request->input('zone_id');
-    	$point = json_decode($request->input('location'));
-    	$attraction->location = new Point($point[1], $point[0]);
-    	$attraction->save();
+    	$zone_id = $request->input('zone_id');
+    	$country_id = $request->input('country_id');
+    	if(!isset($zone_id) && !isset($country_id)) return Response::json(['msg' => 'Llena zone o country'], 500);
 
-    	$attractions = Attraction::all();
-    	return Response::json(['msg' => 'Done!', 'attractions' => $attractions], 200);*/
+    	$award->name = $request->input('name');
+    	$award->icon_path = 'storage/' . $pathI;
+    	$award->country_id = $country_id ?? null;
+    	$award->zone_id = $zone_id ?? null;
+    	$award->unlock_criteria = $request->input('unlock_criteria');
+    	$award->save();
+
+    	$awards = Award::with('zone')->with('country')->get();
+    	return Response::json(['msg' => 'Done!', 'awards' => $awards], 200);
     }
 
     public function delete($id){
-    	/*$attraction = Attraction::find($id);
-    	if(!isset($attraction)) return Response::json(['msg' => 'Zona no encontrado'], 404);
+    	$award = Award::find($id);
+    	if(!isset($award)) return Response::json(['msg' => 'Zona no encontrado'], 404);
 
-    	$pathP = str_replace('storage/','',$attraction->foto_path);
-    	$pathA = str_replace('storage/','',$attraction->audio_path);
-    	$pathI = str_replace('storage/','',$attraction->icon_path);
-    	Storage::disk('public')->delete($pathP);
-    	Storage::disk('public')->delete($pathA);
+    	$pathI = str_replace('storage/','',$award->icon_path);
     	Storage::disk('public')->delete($pathI);
 
-    	$attraction->delete();
-    	$attractions = Attraction::all();
-    	return Response::json(['msg' => 'Done!', 'attractions' => $attractions], 200);**/
+    	$award->delete();
+    	$awards = Award::with('zone')->with('country')->get();
+    	return Response::json(['msg' => 'Done!', 'awards' => $awards], 200);
     }
 }

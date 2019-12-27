@@ -38,7 +38,7 @@ class AttractionsController extends Controller
     	$attraction->location = new Point($point[1], $point[0]);
     	$attraction->save();
 
-    	$attractions = Attraction::all();
+    	$attractions = Attraction::with('zone')->get();
     	return Response::json(['msg' => 'Done!', 'attractions' => $attractions], 200);
     }
 
@@ -54,7 +54,7 @@ class AttractionsController extends Controller
     	Storage::disk('public')->delete($pathI);
 
     	$attraction->delete();
-    	$attractions = Attraction::all();
+    	$attractions = Attraction::with('zone')->get();
     	return Response::json(['msg' => 'Done!', 'attractions' => $attractions], 200);
     }
 }
