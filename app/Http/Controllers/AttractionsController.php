@@ -1,11 +1,11 @@
 <?php
 
-namespace GoGuideMe\Http\Controllers;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use GoGuideMe\Attraction;
+use App\Attraction;
 use \Phaza\LaravelPostgis\Geometries\Point;
-use GoGuideMe\Zone;
+use App\Zone;
 use Response;
 use Illuminate\Support\Facades\Storage;
 

@@ -1,16 +1,16 @@
 <?php
 
-namespace GoGuideMe;
+namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
 class Zone extends Model
 {
     public function country(){
-    	return $this->belongsTo('GoGuideMe\Country');
+    	return $this->belongsTo('App\Country');
     }
 
     public function attractions(){
-    	return $this->hasMany('GoGuideMe\Attraction');
+    	return $this->hasMany('App\Attraction');
     }
 }

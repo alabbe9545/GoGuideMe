@@ -1,12 +1,12 @@
 <?php
 
-namespace GoGuideMe\Http\Controllers;
+namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
-use GoGuideMe\Award;
-use GoGuideMe\Country;
-use GoGuideMe\Zone;
+use App\Award;
+use App\Country;
+use App\Zone;
 use Response;
 
 class AwardsController extends Controller

@@ -1,9 +1,9 @@
 <?php
 
-namespace GoGuideMe\Http\Controllers;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use GoGuideMe\Role;
+use App\Role;
 use Response;
 
 class RolesController extends Controller

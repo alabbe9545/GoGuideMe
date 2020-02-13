@@ -1,10 +1,10 @@
 <?php
 
-namespace GoGuideMe\Http\Controllers;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use GoGuideMe\Zone;
-use GoGuideMe\Country;
+use App\Zone;
+use App\Country;
 use Response;
 use Illuminate\Support\Facades\Storage;
 

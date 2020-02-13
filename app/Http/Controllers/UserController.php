@@ -1,9 +1,9 @@
 <?php
 
-namespace GoGuideMe\Http\Controllers;
+namespace App\Http\Controllers;
 
-use GoGuideMe\User;
-use GoGuideMe\Role;
+use App\User;
+use App\Role;
 use Illuminate\Http\Request;
 use Response;
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace GoGuideMe\Http\Controllers;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use GoGuideMe\Country;
+use App\Country;
 use Response;
 use Illuminate\Support\Facades\Storage;
 
