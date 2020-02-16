@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use App\Country;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,7 +18,7 @@ Route::post('login', 'Api\UserController@login');
 Route::post('register', 'Api\UserController@register');
 
 Route::group(['middleware' => 'auth:api'], function(){
-	Route::post('details', 'Api\UserController@details');
+	Route::get('countries', function(){return Country::all();});
 });
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {

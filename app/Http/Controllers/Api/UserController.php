@@ -30,6 +30,9 @@ class UserController extends Controller {
 		if ($validator->fails()) { 
             return response()->json(['error'=>$validator->errors()], 401);            
         }
+        if(count(User::where('email', $request->input('email'))->get()) > 0){
+        	return response()->json(['error'=>'Already existing account'], 401); 
+        }
 		$input = $request->all(); 
         $input['password'] = bcrypt($input['password']); 
         $user = User::create($input); 
@@ -37,14 +40,4 @@ class UserController extends Controller {
         $success['name'] =  $user->name;
 		return response()->json(['success'=>$success], $this->successStatus); 
     }
-/** 
-     * details api 
-     * 
-     * @return \Illuminate\Http\Response 
-     */ 
-    public function details() 
-    { 
-        $user = Auth::user(); 
-        return response()->json(['success' => $user], $this->successStatus); 
-    } 
 } 
