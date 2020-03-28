@@ -1,10 +1,12 @@
 <?php
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request; 
-use App\Http\Controllers\Controller; 
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB; 
 use App\User; 
 use Illuminate\Support\Facades\Auth; 
 use Validator;
+use App\Attraction;
 
 class UserController extends Controller {
 	public $successStatus = 200;
@@ -39,5 +41,19 @@ class UserController extends Controller {
         $success['token'] =  $user->createToken('MyApp')->accessToken; 
         $success['name'] =  $user->name;
 		return response()->json(['success'=>$success], $this->successStatus); 
+    }
+
+    public function getNearestsAttractions(Request $request){
+        $input = $request->all();
+        $point = $input['point'];
+
+        $attractions = Attraction::whereRaw("ST_DWithin(location, 'POINT(".$point.")', 65)")->get();
+        $user = Auth::user();
+        foreach($attractions as $attraction){
+            if(!$user->visited_attractions->contains($attraction->id)){
+                $user->visited_attractions()->attach($attraction->id);
+            }
+        }
+        return $attractions;
     }
 } 

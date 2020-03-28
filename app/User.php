@@ -43,6 +43,10 @@ class User extends Authenticatable
         return $this->belongsToMany('App\Role');
     }
 
+    public function visited_attractions(){
+        return $this->belongsToMany('App\Attraction', 'visited_attractions', 'user_id', 'attraction_id');
+    }
+
     public function canAct($role){
         $roles = \Auth::user()->roles;
 
