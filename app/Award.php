@@ -13,4 +13,8 @@ class Award extends Model
     public function country(){
     	return $this->belongsTo('App\Country');
     }
+
+    public function users(){
+        return $this->belongsToMany('App\User', 'awards_users', 'award_id', 'user_id');
+    }
 }

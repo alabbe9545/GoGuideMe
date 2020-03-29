@@ -47,6 +47,10 @@ class User extends Authenticatable
         return $this->belongsToMany('App\Attraction', 'visited_attractions', 'user_id', 'attraction_id');
     }
 
+    public function awards(){
+        return $this->belongsToMany('App\Award', 'awards_users', 'user_id','award_id');
+    }
+
     public function canAct($role){
         $roles = \Auth::user()->roles;
 

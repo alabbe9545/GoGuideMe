@@ -17,6 +17,8 @@ class VisitedAttractions extends Migration
             $table->bigIncrements('id');
             $table->integer('user_id');
             $table->integer('attraction_id');
+            $table->integer('zone_id');
+            $table->integer('country_id');
             $table->timestamps();
         });
     }

@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB; 
 use App\User; 
+use App\Award;
+use App\VisitedAttraction;
 use Illuminate\Support\Facades\Auth; 
 use Validator;
 use App\Attraction;
@@ -20,6 +22,10 @@ class UserController extends Controller {
         else{ 
             return response()->json(['error'=>'Unauthorised'], 401); 
         } 
+    }
+
+    public function logout(Request $request){
+        $request->user()->token()->revoke();
     }
 
     public function register(Request $request){ 
@@ -43,17 +49,51 @@ class UserController extends Controller {
 		return response()->json(['success'=>$success], $this->successStatus); 
     }
 
+    private function assignAwards($user_id, $newAttractionData){
+        foreach ($newAttractionData as $datum) {
+            $zoneAwards = Award::where('zone_id', $datum['zone'])->get();
+            $countryAwards = Award::where('country_id', $datum['country'])->get();
+
+            $zoneCount = VisitedAttraction::where('user_id', $user_id)->where('zone_id', $datum['zone'])->count();
+            $countryCount = VisitedAttraction::where('user_id', $user_id)->where('country_id', $datum['country'])->count();
+
+            foreach ($zoneAwards as $award) {
+                if($zoneCount >= $award->unlock_criteria && !$award->users->contains($user_id)){
+                    $award->users()->attach($user_id);
+                }
+            }
+
+            foreach ($countryAwards as $award) {
+                if($countryCount >= $award->unlock_criteria && !$award->users->contains($user_id)){
+                    $award->users()->attach($user_id);
+                }
+            }
+        }
+    }
+
     public function getNearestsAttractions(Request $request){
         $input = $request->all();
         $point = $input['point'];
+        $newAttractionsData = [];
 
         $attractions = Attraction::whereRaw("ST_DWithin(location, 'POINT(".$point.")', 65)")->get();
         $user = Auth::user();
         foreach($attractions as $attraction){
             if(!$user->visited_attractions->contains($attraction->id)){
-                $user->visited_attractions()->attach($attraction->id);
+                $zone = $attraction->zone;
+                $country = $zone->country;
+                $user->visited_attractions()->attach($attraction->id, ['zone_id' => $zone->id, 'country_id' => $country->id]);
+                $newAttractionsData[] = ['country' => $country->id, 'zone' => $zone->id];
             }
         }
+        if(count($newAttractionsData) > 0){
+            $this->assignAwards($user->id, $newAttractionsData);
+        }
         return $attractions;
+    }
+
+    public function awards(){
+        $user = Auth::user();
+        return $user->awards;
     }
 } 
